@@ -6,6 +6,7 @@ import { useWebSocket } from "@/hooks/useWebsocket";
 import { setUser } from "@/stores/slices/userSlice";
 import { MessageType } from "@/types/message_type";
 import { useRouter } from "next/navigation";
+import {useAppSelector} from "@/stores/hook";
 
 const JoinPage: React.FC = () => {
   const router = useRouter();
@@ -14,6 +15,7 @@ const JoinPage: React.FC = () => {
   const [userSubscription, setUserSubscription] = useState<Stomp.Subscription>();
   const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const userCount = useAppSelector((state) => state.websocket.users);
 
   const onUserConnected = (payload: Stomp.Message) =>  {
     const userObject = JSON.parse(payload.body);
@@ -58,7 +60,7 @@ const JoinPage: React.FC = () => {
           Welcome Back
         </h2>
         <h6 className="text-xl text-center text-gray-500 mb-6">
-          Current user:  <span className="font-semibold">{/*fill current user number*/}</span>
+          Current user:  <span className="font-semibold">{userCount}</span>
         </h6>
         <p className="text-center text-gray-500 mb-6">
           Please enter your username to continue

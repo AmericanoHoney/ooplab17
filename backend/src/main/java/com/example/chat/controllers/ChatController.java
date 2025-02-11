@@ -1,6 +1,7 @@
 package com.example.chat.controllers;
 
 
+import com.example.chat.configs.WebSocketEventListener;
 import com.example.chat.dtos.CreateChatMessageBody;
 import com.example.chat.models.ChatMessage;
 import com.example.chat.models.MessageType;
@@ -35,8 +36,10 @@ public class ChatController {
         String message = createChatMessageBody.getMessage();
         MessageType messageType = createChatMessageBody.getType();
         headerAccessor.getSessionAttributes().put("username" , username);
+        WebSocketEventListener.addUser(username);
         messagingTemplate.convertAndSend("/topic/messages" , ChatMessage.buildChatmessage(message,username,messageType));
-         return new User(username);
+        messagingTemplate.convertAndSend("/topic/userCount", WebSocketEventListener.getUserCount());
+        return new User(username);
     }
 
 }

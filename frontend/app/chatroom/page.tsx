@@ -17,7 +17,7 @@ const ChatRoom: React.FC = () => {
   const room = useAppSelector(selectRoom);
   const messages = room?.messages || [];
   const chatContainerRef = useRef<HTMLDivElement>(null);
-
+  const userCount = useAppSelector((state) => state.websocket.users);
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
@@ -41,7 +41,7 @@ const ChatRoom: React.FC = () => {
     }
   }, [user, room, router]);
 
-  
+
   return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-20"> 
         <div className="w-full max-w-5xl space-y-2 bg-white shadow-lg rounded-lg p-8 border border-gray-200">
@@ -50,7 +50,7 @@ const ChatRoom: React.FC = () => {
               Chat Room
             </h2>
             <div className="text-xl font-medium text-gray-700">
-              Current user: <span className="text-teal-500 font-semibold">{/*add number of user*/}</span>
+              Current user: <span className="text-teal-500 font-semibold">{userCount}</span>
             </div>
           </div>
 

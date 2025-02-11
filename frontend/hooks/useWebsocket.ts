@@ -3,7 +3,7 @@ import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import {
   selectWebsocket,
-  setConnectionStatus,
+  setConnectionStatus, setUserCount,
   setWebSocketClient,
 } from "@/stores/slices/webSocketSlice";
 import { useAppSelector } from "@/stores/hook";
@@ -67,6 +67,17 @@ export const useWebSocket = () => {
 
   const onConnected = (stompClient: Stomp.Client) => {
     stompClient.subscribe(`/topic/messages`, onUpdateRoom);
+    stompClient.subscribe("/topic/userCount", (message) => {
+      if (!isNaN(Number(message.body))){
+        console.log("Received user count update:", message.body);
+        dispatch(setUserCount(Number(message.body))); // Update the user count in state
+      }
+      else {
+        console.log("Received user count error : 0");
+        dispatch(setUserCount(0));
+      }
+
+    });
     dispatch(setWebSocketClient(stompClient));
     dispatch(setConnectionStatus(true));
     console.log("WebSocket connected successfully"); 
